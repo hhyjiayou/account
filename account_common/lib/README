@@ -1,0 +1,2 @@
+notes:
+	account工程中得公共代码，编译生成的.a文件会被account_c2s、account_s2s、account_fcgi调用

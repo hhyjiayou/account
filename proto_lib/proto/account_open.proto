@@ -1,0 +1,63 @@
+import "account.proto";
+
+package zhibo_open;
+
+
+//微信/小米 accesstoken 获取协议
+message GetAccessTokenByCodeReq
+{
+required uint32 account_type = 1;//type
+required string code = 2;//code
+optional string appid = 3[default = "10007"];//appid
+}
+
+message GetAccessTokenByCodeRsp
+{
+required uint32 retCode = 1;//返回码
+optional zhibo_account.OpenAccountInfo open_account_info = 2;//OpenAccountInfo
+}
+
+//instagram获取access_token和base_info
+message GetAccessTokenAndBaseInfoByCodeReq
+{
+required uint32 account_type = 1;//type
+required string code = 2;//code
+optional string appid = 3[default = "10007"];//appid
+}
+
+message GetAccessTokenAndBaseInfoByCodeRsp
+{
+required uint32 retCode = 1;//返回码
+optional zhibo_account.OpenAccountInfo open_account_info = 2;
+optional zhibo_account.OuterProfile outer_profile = 3;
+}
+
+//sina weibo/qq accesstoken 验证
+message VerifyAccessTokenReq
+{
+required uint32 account_type = 1;//type
+required string accessToken = 2;//accesstoken
+required string openId = 3;//openid
+optional string appid = 4[default = "10007"];//appid
+}
+
+message VerifyAccessTokenRsp
+{
+required uint32 retCode = 1;//返回码
+optional string unionId = 2;//qq,unionid
+}
+
+//微信/QQ/sina weibo小米 profile获取协议
+message GetOpenProfileReq
+{
+required uint32 account_type = 1;//type
+required string accessToken = 2;//accesstoken
+optional string openId = 3;//openid
+optional string appid = 4[default = "10007"];//appid
+}
+
+message GetOpenProfileRsp
+{
+required uint32 retCode = 1;//返回码
+optional zhibo_account.OuterProfile outerProfile = 2;//outer_profile
+}

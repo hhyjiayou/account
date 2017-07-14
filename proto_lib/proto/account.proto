@@ -1,0 +1,99 @@
+package zhibo_account;
+ 
+//从第三方拉取到的个人资料信息，用于函数调用的接口参数
+message OuterProfile
+{
+optional string nickname = 1;//昵称
+optional string headimgurl = 2;//头像
+optional uint32 sex = 3;//1为男性，2为女性
+optional uint32 certification_type = 4;//认证类型
+optional string certification = 5;//认证信息
+optional string uid = 6; //facebook 的uid
+}
+ 
+//Token相关，用于函数调用的接口参数
+message TokenBox
+{
+required string passtoken = 1;
+required string servicetoken = 2;
+required string securitykey = 3;
+}
+ 
+//PassToken组成字段
+message PassToken
+{
+required string keyword = 1;//关键固定字符串，PassToken固定为"pt",ServiceToken固定为"st" 
+required uint64 uid = 2;
+required uint32 account_type = 3;
+required uint32 create_ts = 4;//时间单位（秒）
+required uint32 nonce = 5;
+}
+ 
+//ServiceToken组成字段
+message ServiceToken
+{
+required string keyword = 1;//关键固定字符串，PassToken固定为"pt",ServiceToken固定为"st" 
+required uint64 uid = 2;
+required uint32 account_type = 3;
+required uint32 create_ts = 4;//时间单位（秒）
+required uint32 nonce = 5;
+required string securitykey = 6;
+optional uint32 appid = 7;
+}
+ 
+//OpenAccountInfo组成字段
+message OpenAccountInfo
+{
+required string openid = 1 [default = ""];
+required uint64 uid = 2 [default = 0];
+required string access_token = 3 [default = ""];
+required uint32 expires_in = 4 [default = 0];
+required uint32 token_update_ts = 5 [default = 0];//access_token更新的时间，精确到秒
+optional string refresh_token = 6;
+optional string unionid = 7; // 新增unionid
+}
+ 
+//AccountInfo组成字段
+message AccountInfo
+{
+required uint64 uid = 1;
+required string openid = 2;
+required uint32 account_type = 3;  //1表示微信登录 2表示QQ登录 3表示新浪微博登录 4表示小米账号登录
+required uint64 create_ts = 4;//账号建立的时间，单位（秒）
+optional string unionid = 5; //新增unionid
+}
+ 
+//OpenAccountInfo存储以防脱裤风险，可能涉及到加密，故特意设计了OpenAccountInfoStore用于存储
+message OpenAccountInfoStore
+{
+required bool encrypted = 1;//是否加密
+required uint32 keyversion = 2;//密钥版本,当第一个密钥泄露后可以添加新密钥并升级keyversion版本
+required string data = 3;//OpenAccountInfo PB对应的字符串,如果加密了就是PB对应的字符串加密后的字符串
+}
+ 
+//zuid->passtoken的存储以防脱裤风险，可能涉及到加密，故特意设计了PassTokenStore用于存储passtoken字符串
+message PassTokenStore
+{
+required bool encrypted = 1;//是否加密
+required uint32 keyversion = 2;//密钥版本,当第一个密钥泄露后可以添加新密钥并升级keyversion版本
+required string data = 3;//passtoken字符串本身而非包含多个字段的PassToken PB结构,如果加密了就是passtoken字符串本身进行加密
+}
+
+
+//zuid->PwdInfo的存储；以防脱裤风险，pwd可能涉及到加密
+message PwdInfo
+{
+required bool encrypted = 1;//是否加密
+required uint32 keyversion = 2;//密钥版本,当第一个密钥泄露后可以添加新密钥并升级keyversion版本
+required uint64 uid = 3;//用户ID
+required string pwd = 4;//如果encrypted==true&&keyversion>0 pwd就是加密之后的
+required uint32 create_ts = 5;//时间单位（秒）
+required uint32 update_ts = 6;//时间单位（秒）
+}
+
+//微信老用户引导信息
+message WxOldUserInfo
+{
+required uint64 uuid = 1;
+optional uint32 counter = 2; //该用户id已经提醒的次数
+}
